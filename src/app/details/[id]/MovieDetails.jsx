@@ -19,7 +19,7 @@ export const MovieDetails = ({ creditData, movieDetail }) => {
     ?.join(" · ");
 
   return (
-    <div className="flex flex-col gap-6 mb-8">
+    <div className="flex flex-col gap-6 mb-8 text-black">
       <div className="flex flex-wrap items-center gap-2">
         {movieDetail?.genres?.map((genre) => (
           <Badge key={genre.id} variant="secondary">

@@ -12,7 +12,7 @@ export const MovieFrame = ({
   runtime,
 }) => {
   return (
-    <div className="mt-13 flex flex-col gap-6 mb-8">
+    <div className="mt-13 flex flex-col gap-6 mb-8 text-black">
       <div className="flex justify-between mb-2">
         <div>
           <h1 className="font-extrabold text-[36px]">{title}</h1>

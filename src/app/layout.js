@@ -24,9 +24,10 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
+      lang="en" className="light" style={{ colorScheme: "light" }}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navigation />
           {children}
