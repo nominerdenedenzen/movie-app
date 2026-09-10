@@ -1,34 +1,17 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import { Button, Input } from "@base-ui/react";
 import { ChevronDown, ChevronRight, MoonIcon, Search } from "lucide-react";
 import Image from "next/image";
-
-const genres = [
-  "Action",
-  "Adventure",
-  "Animation",
-  "Comedy",
-  "Crime",
-  "Documentary",
-  "Drama",
-  "Family",
-  "Fantasy",
-  "History",
-  "Horror",
-  "Mystery",
-  "Romance",
-  "Science Fiction",
-  "Thriller",
-  "Western",
-];
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../@/components/ui/dropdown-menu";
+import { Badge } from "../../../@/components/ui/badge";
+import { GENRE_MAP } from "@/lib/genres";
 
 export const Navigation = () => {
   return (
@@ -56,15 +39,17 @@ export const Navigation = () => {
 
               <DropdownMenuSeparator className="my-4" />
               <div className="grid grid-cols-4 gap-2 pt-2">
-                {genres.map((genre) => (
-                  <div key={genre} className="p-0">
-                    <Badge
-                      variant="secondary"
-                      className="flex items-center justify-between py-1.5 px-3 gap-2 text-[12px] w-full bg-white border-[#E4E4E7] text-black"
-                    >
-                      {genre}
-                      <ChevronRight className="h-3 w-3 opacity-50" />
-                    </Badge>
+                {Object.entries(GENRE_MAP).map(([name, id]) => (
+                  <div key={id} className="p-0">
+                    <Link href={`/genre/${id}`}>
+                      <Badge
+                        variant="secondary"
+                        className="flex items-center justify-between py-1.5 px-3 gap-2 text-[12px] w-full bg-white border-[#E4E4E7] text-black hover:bg-zinc-100 cursor-pointer"
+                      >
+                        {name}
+                        <ChevronRight className="h-3 w-3 opacity-50" />
+                      </Badge>
+                    </Link>
                   </div>
                 ))}
               </div>
@@ -73,6 +58,7 @@ export const Navigation = () => {
 
           <div className="relative flex items-center">
             <Search className="absolute left-3 h-4 w-4 text-muted-foreground pointer-events-none" />
+
             <Input
               placeholder="Search..."
               type="search"

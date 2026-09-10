@@ -1,11 +1,18 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { MovieFrame } from "./MovieFrame";
+import { MovieDetails } from "./MovieDetails";
+import { MoreLike } from "./MoreLike";
 
 const details = () => {
   const params = useParams();
   const movieId = params.id;
+
+  const [movieDetail, setMovieDetail] = useState();
+  const [credits, setCredits] = useState();
+  const [similar, setSimilar] = useState();
 
   const options = {
     method: "GET",
@@ -17,6 +24,10 @@ const details = () => {
   };
 
   useEffect(() => {
+    setMovieDetail(null);
+    setCredits(null);
+    setSimilar(null);
+
     const fetchMovieDetail = async () => {
       try {
         const detailRes = await fetch(
@@ -38,25 +49,34 @@ const details = () => {
         const creditData = await creditRes.json();
         const similarData = await similarRes.json();
 
-        console.log("Movie Details:", detailData);
-        console.log("Cast:", creditData.cast);
-        console.log("Crew:", creditData.crew);
-        console.log("Similar Movies:", similarData.results);
-
-        const data = await res.json();
-        console.log(data);
+        setMovieDetail(detailData);
+        setCredits(creditData);
+        setSimilar(similarData);
       } catch (err) {
         console.error(err);
       }
     };
 
-    fetchMovieDetail();
-  }, []);
+    if (movieId) fetchMovieDetail();
+  }, [movieId]);
+
+  if (!movieDetail) {
+    return <div className="px-45 py-10">Loading...</div>;
+  }
 
   return (
-    <div>
-      page
-      {params.id}
+    <div className="px-45">
+      <MovieFrame
+        title={movieDetail.title}
+        rating={movieDetail.vote_average}
+        voteCount={movieDetail.vote_count}
+        releaseDate={movieDetail.release_date}
+        runtime={movieDetail.runtime}
+        posterPath={movieDetail.poster_path}
+        backdropPath={movieDetail.backdrop_path}
+      />
+      <MovieDetails movieDetail={movieDetail} creditData={credits} />
+      <MoreLike similarMovies={similar} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@base-ui/react";
 import { ArrowRight, Star } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -25,7 +27,7 @@ export default function Categories() {
           options,
         );
         const data = await res.json();
-        setMovies(data.results || []); // Added safety fallback
+        setMovies(data.results || []);
       } catch (err) {
         console.error(err);
       }
@@ -38,7 +40,7 @@ export default function Categories() {
           options,
         );
         const data = await res.json();
-        setPopularMovies(data.results || []); // Added safety fallback
+        setPopularMovies(data.results || []);
       } catch (err) {
         console.error(err);
       }
@@ -46,7 +48,6 @@ export default function Categories() {
 
     const fetchTopRated = async () => {
       try {
-        // FIXED: Changed /movie/toprated to /movie/top_rated
         const res = await fetch(
           "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
           options,
@@ -71,10 +72,10 @@ export default function Categories() {
           return (
             <MovieItems
               key={movie.id}
+              id={movie.id}
               title={movie.title}
               rating={movie.vote_average}
               img={movie.poster_path}
-              id={movie.id}
               className="mb-8"
             />
           );
@@ -87,6 +88,7 @@ export default function Categories() {
           return (
             <MovieItems
               key={movie.id}
+              id={movie.id}
               title={movie.title}
               rating={movie.vote_average}
               img={movie.poster_path}
@@ -102,6 +104,7 @@ export default function Categories() {
           return (
             <MovieItems
               key={movie.id}
+              id={movie.id}
               title={movie.title}
               rating={movie.vote_average}
               img={movie.poster_path}
