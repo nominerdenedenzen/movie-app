@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Search, Star } from "lucide-react";
+import { ArrowRight, Loader2, Search, Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,11 +18,16 @@ const MovieSearch = () => {
       if (!query.trim()) {
         setResults([]);
         setIsOpen(false);
+        setIsLoading(false);
         return;
       }
 
       try {
-        const endpoint = `https://api.themoviedb.org/3/search/movie?query=${query}&page=1`;
+        setIsLoading(true);
+        const endpoint = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+          query,
+        )}&page=1`;
+
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
@@ -33,22 +39,21 @@ const MovieSearch = () => {
 
         const data = await response.json();
         setResults((data.results || []).slice(0, 5));
-        setIsOpen(true); 
+        setIsOpen(true);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchSearch();
   }, [query]);
 
-  console.log("QUERY:", query);
-  console.log("RESULTS:", results);
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && query.trim()) {
       setIsOpen(false);
-      router.push(`/search?q=${query}`);
+      router.push(`/search?q=${encodeURIComponent(query)}`);
     }
   };
 
@@ -70,8 +75,11 @@ const MovieSearch = () => {
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim() && setIsOpen(true)}
           placeholder="Search..."
-          className="w-full rounded-md border border-[#E4E4E7] bg-white text-zinc-900 pl-9 pr-3 py-2 text-sm placeholder-zinc-400 outline-none focus:border-zinc-400"
+          className="w-full rounded-md border border-[#E4E4E7] bg-white text-zinc-900 pl-9 pr-9 py-2 text-sm placeholder-zinc-400 outline-none focus:border-zinc-400"
         />
+        {isLoading && (
+          <Loader2 className="absolute right-3 h-4 w-4 text-zinc-400 animate-spin" />
+        )}
       </div>
 
       {isOpen && results.length > 0 && (
@@ -79,34 +87,33 @@ const MovieSearch = () => {
           {results.map((movie, index) => (
             <div key={movie.id}>
               <Link
-                href={`/movie/${movie.id}`}
+                href={`/details/${movie.id}`}
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-between gap-3 p-2 hover:bg-zinc-50 rounded-md"
+                className="flex items-center justify-between gap-3 p-2 hover:bg-zinc-50 rounded-md transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   <img
                     src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
                     alt={movie.title}
-                    className="w-10 h-14 object-cover rounded-md shrink-0"
+                    className="w-10 h-14 object-cover rounded-md shrink-0 bg-zinc-100"
                   />
 
-                  <div className="flex flex-col gap-0.5">
-                    <h4 className="font-semibold text-sm text-zinc-900">{movie.title}</h4>
+                  <div className="flex flex-col gap-0.5 truncate">
+                    <h4 className="font-semibold text-sm text-zinc-900 truncate">
+                      {movie.title}
+                    </h4>
                     <div className="flex items-center gap-1 text-xs text-zinc-500 mt-0.5">
-                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      <span>{movie.vote_average?.toFixed(1)}/10</span>
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                      <span>{movie.vote_average?.toFixed(1) || "N/A"}/10</span>
                     </div>
                   </div>
                 </div>
-                
-                <Link href={`/details/${movie.id}`}>
+
                 <div className="flex items-center gap-1 text-xs font-medium text-zinc-900 shrink-0">
                   See more <ArrowRight className="w-3 h-3" />
                 </div>
-                </Link>
               </Link>
 
-             
               <Separator className="my-1 bg-zinc-200" />
             </div>
           ))}

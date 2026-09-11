@@ -6,7 +6,7 @@ import { MovieFrame } from "./MovieFrame";
 import { MovieDetails } from "./MovieDetails";
 import { MoreLike } from "./MoreLike";
 
-const details = () => {
+const Details = () => {
   const params = useParams();
   const movieId = params.id;
 
@@ -74,6 +74,7 @@ const details = () => {
         runtime={movieDetail.runtime}
         posterPath={movieDetail.poster_path}
         backdropPath={movieDetail.backdrop_path}
+        movieId={movieId}
       />
       <MovieDetails movieDetail={movieDetail} creditData={credits} />
       <MoreLike similarMovies={similar} />
@@ -81,4 +82,4 @@ const details = () => {
   );
 };
 
-export default details;
+export default Details;

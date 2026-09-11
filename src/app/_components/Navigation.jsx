@@ -34,7 +34,7 @@ export const Navigation = () => {
               className="flex items-center gap-2 rounded-md border border-[#E4E4E7] bg-white py-2 px-4 text-sm font-medium text-[#18181B] hover:bg-zinc-50 cursor-pointer"
             ></DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-[520px] p-4 bg-white border border-zinc-200 shadow-lg">
+            <DropdownMenuContent className="w-130 p-4 bg-white border border-zinc-200 shadow-lg">
               <h3 className="font-semibold text-[24px] text-zinc-900">Genre</h3>
               <p className="font-normal text-[16px] text-zinc-500">
                 See lists of movies by genre
@@ -59,7 +59,7 @@ export const Navigation = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <MovieSearch/>
+          <MovieSearch />
         </div>
 
         <button

@@ -60,8 +60,10 @@ const GenreFilter = ({ params }) => {
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 flex flex-col gap-6 mt-16 px-20 pb-16">
-      <h2 className="font-semibold text-[30px] text-zinc-900">Search Results</h2>
-      
+      <h2 className="font-semibold text-[30px] text-zinc-900">
+        Search Results
+      </h2>
+
       <div className="flex flex-row gap-8">
         <div className="flex flex-col gap-4 w-80 shrink-0">
           <div className="flex flex-col gap-1">
@@ -94,7 +96,7 @@ const GenreFilter = ({ params }) => {
           <h3 className="font-semibold text-[20px] text-zinc-900">
             {movies?.length || 0} titles found
           </h3>
-          
+
           <div className="flex flex-col gap-8">
             {isLoading ? (
               <p className="text-zinc-500">Loading movies...</p>
@@ -128,5 +130,3 @@ const GenreFilter = ({ params }) => {
 };
 
 export default GenreFilter;
-
-  
