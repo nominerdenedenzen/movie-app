@@ -6,6 +6,7 @@ import Link from "next/link";
 import { GENRE_MAP } from "@/lib/genres";
 import { MovieItems } from "../../_components";
 import { Badge } from "../../_components/Badge";
+import GenreList from "@/app/_components/Genres";
 
 const GenreFilter = ({ params }) => {
   const resolvedParams = use(params);
@@ -74,19 +75,7 @@ const GenreFilter = ({ params }) => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {Object.entries(GENRE_MAP).map(([genreName, id]) => (
-              <div key={id} className="p-0">
-                <Link href={`/genre/${id}`}>
-                  <Badge
-                    variant="secondary"
-                    className="flex items-center justify-between py-1.5 px-3 gap-2 text-[12px] w-full bg-white border border-zinc-200 text-zinc-900 hover:bg-zinc-100 cursor-pointer shadow-none"
-                  >
-                    {genreName}
-                    <ChevronRight className="h-3 w-3 text-zinc-400" />
-                  </Badge>
-                </Link>
-              </div>
-            ))}
+            <GenreList/>
           </div>
         </div>
 

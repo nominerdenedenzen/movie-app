@@ -8,13 +8,14 @@ import { Badge } from "../../../@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { MovieItems } from "../_components";
 import { Skeleton } from "@/components/ui/skeleton";
+import GenreList from "../_components/Genres";
 
 const Search=()=>{
 
 const searchParams = useSearchParams();
 const query = searchParams.get("q");
 
-// Log the query whenever the component renders
+
 console.log("Current search query:", query);
 
   const [movies, setMovies] = useState([]);
@@ -121,19 +122,7 @@ console.log("Current search query:", query);
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {Object.entries(GENRE_MAP).map(([name, id]) => (
-                  <div key={id} className="p-0">
-                    <Link href={`/genre/${id}`}>
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center justify-between py-1.5 px-3 gap-2 text-[12px] w-full bg-white border border-zinc-200 text-zinc-900 hover:bg-zinc-100 cursor-pointer shadow-none"
-                      >
-                        {name}
-                        <ChevronRight className="h-3 w-3 opacity-50 text-zinc-500" />
-                      </Badge>
-                    </Link>
-                  </div>
-                ))}
+            <GenreList/>
           </div>
         </div>
       </div>
