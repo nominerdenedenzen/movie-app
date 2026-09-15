@@ -4,13 +4,15 @@ import { useState, useEffect, use } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { GENRE_MAP } from "@/lib/genres";
-import { MovieItems } from "../../_components";
-import { Badge } from "../../_components/Badge";
+import { MovieItems } from "../_components";
+import { Badge } from "../_components/Badge";
 import GenreList from "@/app/_components/Genres";
+import { useSearchParams } from "next/navigation";
 
 const GenreFilter = ({ params }) => {
   const resolvedParams = use(params);
-  const genreId = resolvedParams?.id;
+  const searchParams = useSearchParams();
+  const genreId = searchParams.get("id");
 
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,7 +77,7 @@ const GenreFilter = ({ params }) => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <GenreList/>
+            <GenreList />
           </div>
         </div>
 

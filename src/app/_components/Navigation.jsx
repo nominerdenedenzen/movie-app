@@ -44,7 +44,7 @@ export const Navigation = () => {
               <div className="grid grid-cols-4 gap-2 pt-2">
                 {Object.entries(GENRE_MAP).map(([name, id]) => (
                   <div key={id} className="p-0">
-                    <Link href={`/genre/${id}`}>
+                    <Link href={`/genre?id=${id}`}>
                       <Badge
                         variant="secondary"
                         className="flex items-center justify-between py-1.5 px-3 gap-2 text-[12px] w-full bg-white border border-zinc-200 text-zinc-900 hover:bg-zinc-100 cursor-pointer shadow-none"

@@ -10,13 +10,11 @@ import { MovieItems } from "../_components";
 import { Skeleton } from "@/components/ui/skeleton";
 import GenreList from "../_components/Genres";
 
-const Search=()=>{
+const Search = () => {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q");
 
-const searchParams = useSearchParams();
-const query = searchParams.get("q");
-
-
-console.log("Current search query:", query);
+  console.log("Current search query:", query);
 
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +31,7 @@ console.log("Current search query:", query);
 
   useEffect(() => {
     setPage(1);
-  }, [query]); 
+  }, [query]);
   useEffect(() => {
     const fetchSearchMovies = async () => {
       if (!query) return;
@@ -41,12 +39,11 @@ console.log("Current search query:", query);
       try {
         setIsLoading(true);
 
-        
         const endpoint = `https://api.themoviedb.org/3/search/movie?query=${query}&page=${page}`;
 
         const response = await fetch(endpoint, {
           method: "GET",
-          
+
           headers: {
             accept: "application/json",
             Authorization:
@@ -66,12 +63,8 @@ console.log("Current search query:", query);
     fetchSearchMovies();
   }, [query, page]);
 
- 
-   
-
-
-    return (
-        <div className="flex flex-col gap-6 mt-16 px-20 text-black">
+  return (
+    <div className="flex flex-col gap-6 mt-16 px-20 text-black">
       <h2 className="font-semibold text-[30px]">Search results</h2>
       <div className="flex flex-row gap-8">
         <div className="flex flex-col gap-8 flex-1">
@@ -80,16 +73,18 @@ console.log("Current search query:", query);
           </h3>
 
           <div className="flex flex-col gap-8 min-h-100">
-  {isLoading ? (
-    <Skeleton count={8} />
-  ) : movies.length > 0 ? (
-    <MovieItems movies={movies} />
-  ) : (
-    <div className="flex flex-col items-center justify-center px-5 py-6 border rounded-lg border-[#E4E4E7]">
-      <p className="text-black font-medium text-[14px]">No results found.</p>
-    </div>
-  )}
-</div>
+            {isLoading ? (
+              <Skeleton count={8} />
+            ) : movies.length > 0 ? (
+              <MovieItems movies={movies} />
+            ) : (
+              <div className="flex flex-col items-center justify-center px-5 py-6 border rounded-lg border-[#E4E4E7]">
+                <p className="text-black font-medium text-[14px]">
+                  No results found.
+                </p>
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center justify-center gap-4 py-6 text-black">
             <button
@@ -122,12 +117,12 @@ console.log("Current search query:", query);
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <GenreList/>
+            <GenreList />
           </div>
         </div>
       </div>
     </div>
-    )
+  );
 };
 
 export default Search;

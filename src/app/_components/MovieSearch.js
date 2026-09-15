@@ -19,7 +19,7 @@ const MovieSearch = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       setIsOpen(false);
-      e.target.blur(); 
+      e.target.blur();
       if (query.trim()) {
         router.push(`/search?q=${query}`);
       }
@@ -61,6 +61,7 @@ const MovieSearch = () => {
       } catch (err) {
         console.error("Search Error:", err);
       } finally {
+        setIsLoading(false);
         setIsLoading(false);
       }
     };
@@ -122,19 +123,13 @@ const MovieSearch = () => {
                       <div className="flex items-center gap-1 text-xs text-zinc-600 mt-1">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                         <span>
-                          {movie.vote_average
-                            ? movie.vote_average.toFixed(1)
-                            : "N/A"}
+                          {movie.vote_average.toFixed(1)}
                           /10
                         </span>
                       </div>
                     </div>
                     <div className="flex justify-between items-center text-xs text-zinc-500 mt-1">
-                      <p>
-                        {movie.release_date
-                          ? movie.release_date.split("-")[0]
-                          : "N/A"}
-                      </p>
+                      <p>{movie.release_date}</p>
                       <Link
                         href={`/details/${movie.id}`}
                         onClick={() => setIsOpen(false)}

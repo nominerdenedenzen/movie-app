@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Play, Star } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export function Hero() {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [trailerKey, setTrailerKey] = useState();
 
   const options = {
     method: "GET",
@@ -15,6 +17,8 @@ export function Hero() {
         "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNjdkOGJlYmQwZjRmZjM0NWY2NTA1Yzk5ZTlkMDI4OSIsIm5iZiI6MTc0MjE3NTA4OS4zODksInN1YiI6IjY3ZDc3YjcxODVkMTM5MjFiNTAxNDE1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KxFMnZppBdHUSz_zB4p9A_gRD16I_R6OX1oiEe0LbE8",
     },
   };
+
+  const currentMovie = movies[currentIndex];
 
   useEffect(() => {
     const fetchUpcoming = async () => {
@@ -34,6 +38,27 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
+    const fetchTrailerKey = async () => {
+      if (!currentMovie?.id) return;
+      try {
+        const endpoint = `https://api.themoviedb.org/3/movie/${currentMovie.id}/videos?language=en-US`;
+
+        const response = await fetch(endpoint, options);
+        const data = await response.json();
+
+        setTrailerKey(
+          data.results?.find((item) => item.type === "Trailer")?.key ||
+            data.results?.[0]?.key,
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchTrailerKey();
+  }, [currentMovie?.id]);
+
+  useEffect(() => {
     if (movies.length === 0) return;
 
     const interval = setInterval(() => {
@@ -50,8 +75,6 @@ export function Hero() {
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % movies.length);
   };
-
-  const currentMovie = movies[currentIndex];
 
   if (!currentMovie) return null;
 
@@ -88,23 +111,41 @@ export function Hero() {
             {currentMovie.overview}
           </p>
 
-          <button className="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded-lg hover:bg-slate-200 transition-all w-fit mt-2 shadow-md active:scale-95">
-            <Play className="h-4 w-4 fill-black text-black" />
-            Watch Trailer
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded-lg hover:bg-slate-200 transition-all w-fit mt-2 shadow-md active:scale-95 cursor-pointer">
+                <Play className="h-4 w-4 fill-black text-black" />
+                Watch Trailer
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl! p-0! bg-black border-none rounded-none overflow-hidden shadow-none">
+              <div className="w-full aspect-video bg-black flex items-center justify-center">
+                {trailerKey && (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                    title="YouTube video player"
+                    className="w-full h-full border-0 block"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  ></iframe>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#F4F4F5]/80 hover:bg-white text-black p-3 rounded-full z-20 transition-all hover:scale-110 shadow-md"
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#F4F4F5]/80 hover:bg-white text-black p-3 rounded-full z-20 transition-all hover:scale-110 shadow-md cursor-pointer"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
 
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#F4F4F5]/80 hover:bg-white text-black p-3 rounded-full z-20 transition-all hover:scale-110 shadow-md"
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#F4F4F5]/80 hover:bg-white text-black p-3 rounded-full z-20 transition-all hover:scale-110 shadow-md cursor-pointer"
       >
         <ChevronRight className="h-6 w-6" />
       </button>
@@ -114,7 +155,7 @@ export function Hero() {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
+            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
               currentIndex === index
                 ? "w-8 bg-white"
                 : "w-2 bg-white/50 hover:bg-white/80"

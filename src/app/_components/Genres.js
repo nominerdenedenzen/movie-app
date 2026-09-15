@@ -1,52 +1,89 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronRight, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-const GENRES = [
-  { name: "Action", id: 28 },
-  { name: "Adventure", id: 12 },
-  { name: "Animation", id: 16 },
-  { name: "Comedy", id: 35 },
-  { name: "Crime", id: 80 },
-  { name: "Documentary", id: 99 },
-  { name: "Drama", id: 18 },
-  { name: "Family", id: 10751 },
-  { name: "Fantasy", id: 14 },
-  { name: "History", id: 36 },
-  { name: "Horror", id: 27 },
-  { name: "Music", id: 10402 },
-  { name: "Mystery", id: 9648 },
-  { name: "Romance", id: 10749 },
-  { name: "Science Fiction", id: 878 },
-  { name: "TV Movie", id: 10770 },
-  { name: "Thriller", id: 53 },
-  { name: "War", id: 10752 },
-  { name: "Western", id: 37 },
-];
+import { useRouter, useSearchParams } from "next/navigation";
 
 const GenreList = () => {
-  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleChoose = (genreId) => {
-    setSelectedGenres((prevGenres) => {
-      if (prevGenres.includes(genreId)) {
-        return prevGenres.filter((id) => id !== genreId);
+  const genreParam = searchParams.get("id");
+  const selectedGenres = genreParam ? genreParam.split(",").map(Number) : [];
+
+  useEffect(() => {
+    const fetchGenreMovies = async () => {
+      try {
+        const endpoint = `https://api.themoviedb.org/3/genre/movie/list`;
+
+        const response = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNjdkOGJlYmQwZjRmZjM0NWY2NTA1Yzk5ZTlkMDI4OSIsIm5iZiI6MTc0MjE3NTA4OS4zODksInN1YiI6IjY3ZDc3YjcxODVkMTM5MjFiNTAxNDE1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KxFMnZppBdHUSz_zB4p9A_gRD16I_R6OX1oiEe0LbE8",
+          },
+        });
+
+        const data = await response.json();
+        setGenres(data.genres || []);
+        console.log("data", data);
+      } catch (err) {
+        console.error(err);
       }
-      return [...prevGenres, genreId];
-    });
+    };
+
+    fetchGenreMovies();
+  }, []);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      if (selectedGenres.length === 0) {
+        setMovies([]);
+        return;
+      }
+
+      try {
+        const endpoint = `https://api.themoviedb.org/3/discover/movie?with_genres=${selectedGenres}`;
+        const response = await fetch(endpoint, {
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNjdkOGJlYmQwZjRmZjM0NWY2NTA1Yzk5ZTlkMDI4OSIsIm5iZiI6MTc0MjE3NTA4OS4zODksInN1YiI6IjY3ZDc3YjcxODVkMTM5MjFiNTAxNDE1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KxFMnZppBdHUSz_zB4p9A_gRD16I_R6OX1oiEe0LbE8",
+          },
+        });
+
+        const data = await response.json();
+        console.log("DATA", data);
+        setMovies(data.results || []);
+      } catch (err) {
+        console.error("Failed to fetch movies:", err);
+      }
+    };
+
+    fetchMovies();
+  }, [genreParam]);
+
+  const handleChoose = (id) => {
+    const nextGenres = selectedGenres.includes(id)
+      ? selectedGenres.filter((item) => item !== id)
+      : [...selectedGenres, id];
+
+    router.push(`/genre?id=${nextGenres}`);
   };
 
   return (
     <div>
       <div className="flex flex-wrap gap-2">
-        {GENRES.map((genre) => {
+        {genres?.map((genre) => {
           const isSelected = selectedGenres.includes(genre.id);
 
           return (
             <Badge
               key={genre.id}
               onClick={() => handleChoose(genre.id)}
-              variant={isSelected ? "secondary" : "default"}
+              variant={isSelected ? "default" : "secondary"}
               className="flex items-center justify-between gap-1.5 py-1.5 px-3 cursor-pointer select-none"
             >
               <span>{genre.name}</span>
