@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "./Badge";
+
 import { GENRE_MAP } from "@/lib/genres";
 import MovieSearch from "./MovieSearch";
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ChevronRight, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "./Badge";
+
 import { useRouter, useSearchParams } from "next/navigation";
 
 const GenreList = () => {

@@ -64,64 +64,66 @@ const Search = () => {
   }, [query, page]);
 
   return (
-    <div className="flex flex-col gap-6 mt-16 px-20 text-black">
-      <h2 className="font-semibold text-[30px]">Search results</h2>
-      <div className="flex flex-row gap-8">
-        <div className="flex flex-col gap-8 flex-1">
-          <h3 className="font-semibold text-[20px]">
-            {movies.length} results for {query}
-          </h3>
+    <Suspense>
+      <div className="flex flex-col gap-6 mt-16 px-20 text-black">
+        <h2 className="font-semibold text-[30px]">Search results</h2>
+        <div className="flex flex-row gap-8">
+          <div className="flex flex-col gap-8 flex-1">
+            <h3 className="font-semibold text-[20px]">
+              {movies.length} results for {query}
+            </h3>
 
-          <div className="flex flex-col gap-8 min-h-100">
-            {isLoading ? (
-              <Skeleton count={8} />
-            ) : movies.length > 0 ? (
-              <MovieItems movies={movies} />
-            ) : (
-              <div className="flex flex-col items-center justify-center px-5 py-6 border rounded-lg border-[#E4E4E7]">
-                <p className="text-black font-medium text-[14px]">
-                  No results found.
-                </p>
-              </div>
-            )}
+            <div className="flex flex-col gap-8 min-h-100">
+              {isLoading ? (
+                <Skeleton count={8} />
+              ) : movies.length > 0 ? (
+                <MovieItems movies={movies} />
+              ) : (
+                <div className="flex flex-col items-center justify-center px-5 py-6 border rounded-lg border-[#E4E4E7]">
+                  <p className="text-black font-medium text-[14px]">
+                    No results found.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-center gap-4 py-6 text-black">
+              <button
+                onClick={handlePrev}
+                disabled={page === 1}
+                className="px-4 py-2 flex gap-2 rounded-md items-center border border-[#E4E4E7] text-sm disabled:opacity-50 cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Previous
+              </button>
+              <span className="text-sm font-medium">{page}</span>
+              <button
+                onClick={handleNext}
+                className="px-4 py-2 flex gap-2 rounded-md items-center border border-[#E4E4E7] text-sm cursor-pointer"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 py-6 text-black">
-            <button
-              onClick={handlePrev}
-              disabled={page === 1}
-              className="px-4 py-2 flex gap-2 rounded-md items-center border border-[#E4E4E7] text-sm disabled:opacity-50 cursor-pointer"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Previous
-            </button>
-            <span className="text-sm font-medium">{page}</span>
-            <button
-              onClick={handleNext}
-              className="px-4 py-2 flex gap-2 rounded-md items-center border border-[#E4E4E7] text-sm cursor-pointer"
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+          <div className="w-px bg-[#E4E4E7] self-stretch" />
 
-        <div className="w-px bg-[#E4E4E7] self-stretch" />
+          <div className="flex flex-col gap-4 w-80 shrink-0">
+            <div className="flex flex-col gap-1">
+              <h3 className="font-semibold text-[24px]">Genres</h3>
+              <p className="text-base font-normal text-[16px]">
+                See lists of movies by genre
+              </p>
+            </div>
 
-        <div className="flex flex-col gap-4 w-80 shrink-0">
-          <div className="flex flex-col gap-1">
-            <h3 className="font-semibold text-[24px]">Genres</h3>
-            <p className="text-base font-normal text-[16px]">
-              See lists of movies by genre
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <GenreList />
+            <div className="flex flex-wrap gap-2">
+              <GenreList />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

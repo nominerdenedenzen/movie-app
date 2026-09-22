@@ -2,7 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { Footer, Navigation } from "./_components";
-import { ThemeProvider } from "@/components/ui/theme-proved";
+import { ThemeProvider } from "./_components/movie-app/components/theme-provider";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,15 +25,17 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      lang="en" className="light" style={{ colorScheme: "light" }}
+      style={{ colorScheme: "light" }}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navigation />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <Suspense>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Navigation />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );
